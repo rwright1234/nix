@@ -249,7 +249,7 @@
   # Automatic Garbage Collection
   nix.gc = {
                 automatic = true;
-                dates = "daily";
+                dates = "weekly";
                 options = "--delete-older-than 3d";
           };
 
