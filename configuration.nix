@@ -9,6 +9,17 @@
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
     ];
+    
+  nixpkgs.overlays =
+  let
+    # Change this to a rev sha to pin
+    moz-rev = "master";
+    moz-url = builtins.fetchTarball { url = "https://github.com/mozilla/nixpkgs-mozilla/archive/${moz-rev}.tar.gz";};
+    nightlyOverlay = (import "${moz-url}/firefox-overlay.nix");
+  in [
+    nightlyOverlay
+  ];
+  programs.firefox.package = pkgs.latest.firefox-nightly-bin;
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -44,33 +55,30 @@
   };
 
   # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  #  services.xserver.enable = true; // optional
-
-  # Enable the KDE Plasma Desktop Environment.
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = true;
-  #services.displayManager.sddm.wayland.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  
+   environment.variables = {
+    MOZ_ENABLE_WAYLAND = 0;
+  };
+
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
     layout = "us";
     xkbVariant = "";
   };
+  
+  #Firmware Updates
+  services.fwupd.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable Bluetooth
-  hardware.bluetooth.enable = true;
-
-  # Enable kdeconnect
-  programs.kdeconnect.enable = true;
-  services.fwupd.enable = true;
-  services.flatpak.enable = true;
-
   # Enable sound with pipewire.
+  #sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -87,7 +95,7 @@
   };
 
   # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
+   services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.roderick = {
@@ -95,13 +103,10 @@
     description = "Roderick Wright";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-      kdePackages.kate
+    #  firefox
     #  thunderbird
     ];
   };
-
-  # Install firefox.
-  #programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -111,45 +116,41 @@
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    git
-    vim
-    pkgs.fastfetch
-    kate
-    brave
+    fastfetch
+    pkgs.gnome-tweaks
+    gnome-extension-manager
     curl
-    isoimagewriter
     pkgs.appimage-run
-    pkgs.kdePackages.plasma-browser-integration
-    pkgs.gnome.gnome-disk-utility
-    pkgs.kdePackages.plasma-desktop
-    htop
     fontconfig
     freetype
-    pkgs.kdePackages.kdeconnect-kde
-    pkgs.kdePackages.partitionmanager
-    pkgs.kdePackages.kaccounts-integration
-    pkgs.kdePackages.kaccounts-providers
-    pkgs.kdePackages.korganizer
-    pkgs.kdePackages.kio-gdrive
-    pkgs.kdePackages.plasma-browser-integration
-    pkgs.kdePackages.akonadi-contacts
-    pkgs.kdePackages.kcontacts
-    pkgs.kdePackages.kdepim-addons
-    pkgs.kdePackages.kdepim-runtime
-    pkgs.kdePackages.libkdepim
-    pkgs.kdePackages.calendarsupport
-    pkgs.kdePackages.kcalutils
-    pkgs.kdePackages.eventviews
-    pkgs.kdePackages.kcalendarcore
-    pkgs.kdePackages.akonadi-calendar
-    pkgs.thunderbird
-    pkgs.kdePackages.sddm-kcm
-    nil
-    cmatrix
+    git
+    pkgs.github-desktop
+    pkgs.gnome-terminal 
+    brave
+    tree
+    pkgs.chromium
+    pkgs.linuxKernel.packages.linux_5_15.rtw89
     pkgs.firefox-bin
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.gsconnect
     pkgs.google-chrome
-    pkgs.kdePackages.kontact
-  ];
+    pkgs.gnomeExtensions.compiz-windows-effect
+    pkgs.gnomeExtensions.compiz-alike-magic-lamp-effect
+    pkgs.gnomeExtensions.logo-menu
+    pkgs.gnomeExtensions.coverflow-alt-tab
+    pkgs.gnomeExtensions.show-desktop-button
+    pkgs.gnomeExtensions.burn-my-windows
+    pkgs.gnomeExtensions.gtk4-desktop-icons-ng-ding
+    pkgs.gnomeExtensions.custom-hot-corners-extended
+    pkgs.gnomeExtensions.clipboard-indicator
+    pkgs.gnome-weather
+    pkgs.gnomeExtensions.blur-my-shell
+    pkgs.gnome-software
+    pkgs.gnome-weather
+    pkgs.ptyxis
+    ];
+
+  programs.firefox.nativeMessagingHosts.gsconnect = true;
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -157,10 +158,7 @@
   # programs.gnupg.agent = {
   #   enable = true;
   #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
+  # 
   # Enable the OpenSSH daemon.
   # services.openssh.enable = true;
 
@@ -178,17 +176,19 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "24.05"; # Did you read the comment?
 
-  # programs.evolution.enable = true;
-   programs.nix-ld.enable = true;
-   programs.nix-ld.libraries = with pkgs; [
+   # List services that you want to enable:
+   
+  services.flatpak.enable = true;
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
   # Add any missing dynamic libraries for unpackaged programs
   # here, NOT in environment.systemPackages
-  ];
-
+  ]; 
+        
   ## Backups & Upgrades
   # Backup system config
   system.copySystemConfiguration = true;
-
+  
   # System Upgrades
   system.autoUpgrade.enable = true;
   system.autoUpgrade.allowReboot = true;
