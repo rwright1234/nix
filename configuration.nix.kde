@@ -101,7 +101,8 @@
   };
 
   # Install firefox.
-  #programs.firefox.enable = true;
+  programs.firefox.enable = true;
+  programs.kde-pim.kontact = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -120,7 +121,7 @@
     isoimagewriter
     pkgs.appimage-run
     pkgs.kdePackages.plasma-browser-integration
-    pkgs.gnome.gnome-disk-utility
+    pkgs.gnome-disk-utility
     pkgs.kdePackages.plasma-desktop
     htop
     fontconfig
@@ -146,10 +147,8 @@
     pkgs.kdePackages.sddm-kcm
     nil
     cmatrix
-    pkgs.firefox-bin
     pkgs.google-chrome
-    pkgs.kdePackages.kontact
-  ];
+    ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
