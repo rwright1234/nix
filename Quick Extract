@@ -1,0 +1,21 @@
+[Desktop Entry]
+Comment[en_US]=Extracts files without asking for user input
+Comment=Extracts files without asking for user input
+Exec=ark -ba %U
+GenericName[en_US]=Extract files with Ark
+GenericName=Extract files with Ark
+Icon=ark
+InitialPreference=3
+MimeType=application/zstd;application/zlib;application/zip;application/x-zstd-compressed-tar;application/x-xz-compressed-tar;application/x-xz;application/x-xar;application/x-tzo;application/x-tarz;application/x-tar;application/x-sv4crc;application/x-sv4cpio;application/x-stuffit;application/x-source-rpm;application/x-rpm;application/x-lzop;application/x-lzma-compressed-tar;application/x-lzma;application/x-lzip-compressed-tar;application/x-lzip;application/x-lz4-compressed-tar;application/x-lz4;application/x-lrzip-compressed-tar;application/x-lrzip;application/x-lha;application/x-iso9660-appimage;application/x-cpio-compressed;application/x-cpio;application/x-compressed-tar;application/x-compress;application/x-bzip2-compressed-tar;application/x-bzip2-compressed-tar;application/x-bzip2;application/x-bzip2;application/x-bcpio;application/x-arj;application/x-archive;application/x-7z-compressed;application/vnd.rar;application/vnd.ms-cab-compressed;application/vnd.efi.iso;application/vnd.efi.iso;application/vnd.debian.binary-package;application/vnd.debian.binary-package;application/java-archive;application/gzip;
+Name[en_US]=Quick Extract
+Name=Quick Extract
+NoDisplay=false
+Path=
+StartupNotify=true
+StartupWMClass=ark
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DocPath=ark/index.html
+X-KDE-SubstituteUID=false
+X-KDE-Username=
