@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Firefox
+Exec=/usr/share/firefox/firefox
+Comment=Web Browser
+Terminal=false
+Categories=Network;WebBrowser;
+Icon=/usr/share/firefox/browser/chrome/icons/default/default32.png
+Type=Application
+Name[en_US]=Firefox.desktop
